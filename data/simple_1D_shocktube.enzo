@@ -1,0 +1,22 @@
+#1D shock tube parameter file (ENZO-esque)
+nx = 400
+x0 = 0.0
+x1 = 1.0
+interface_position = 0.5 
+
+gamma = 1.4
+cfl = 0.45
+t_final = 0.2
+
+output_dt = 0.01          
+
+left_rho = 1.0
+left_u = 0.0
+left_p = 1.0
+
+right_rho = 0.125
+right_u = 0.0
+right_p = 0.1
+
+bc_type = outflow 
+output_dir = data/outputs

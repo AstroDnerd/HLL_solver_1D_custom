@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.so
+
+*.o
+*.obj
+nikhil_hll
+
+
+data/outputs/*.csv
+data/simulation.npy
+data/simulation_metadata.json
+
+# --- OS Junk ---
+.DS_Store
+Thumbs.db

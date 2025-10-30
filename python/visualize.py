@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 import json
 import numpy as np
@@ -77,13 +78,10 @@ def plot_profiles(sim_data, metadata, output_dir="data/plots"):
         print(f"Saved plot: {save_path}")
         plt.close()
 
-def create_animation(sim_data, metadata, output_file="data/plots/simulation.mp4"):
+def create_animation(sim_data, metadata, output_file="data/plots/simulation.gif"):
     """
-    Creates an MP4 animation
+    Creates a gif of simulation!
     """
-    if os.system("which ffmpeg > /dev/null 2>&1") != 0:
-        print("Warning: ffmpeg not found. Skipping animation.")
-        return
 
     print("Generating animation...")
     cols = metadata["columns"]
@@ -129,7 +127,7 @@ def create_animation(sim_data, metadata, output_file="data/plots/simulation.mp4"
     anim = animation.FuncAnimation(fig, update, frames=len(times), interval=50, blit=False) #Interval is in ms
     
     try:
-        anim.save(output_file, writer='ffmpeg', fps=30, dpi=150)
+        anim.save(output_file, writer='pillow', fps=8, dpi=150)
         print(f"Saved animation: {output_file}")
     except Exception as e:
         print(f"Error saving animation: {e}")

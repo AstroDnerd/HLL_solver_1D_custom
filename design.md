@@ -1,7 +1,7 @@
 # Design Document: HLL Solver & Architecture
 
 ## 1. Objective
-To implement a transparent and minimal 1D Riemann solver that bridges the gap between low-level numerical implementations (C++) and high-level data analysis workflows (Python). The design mimics the modularity found in larger astrophysical codes like ENZO [The ENZO Project](https://enzo-project.org/)
+To implement a transparent and minimal 1D Riemann solver that bridges the gap between low-level numerical implementations (C++) and high-level data analysis workflows (Python). The design mimics the modularity found in larger astrophysical codes like ENZO ([The ENZO Project](https://enzo-project.org/))
 
 
 ## 2. Numerical Method
@@ -34,24 +34,10 @@ The inter-cell fluxes are computed using the **HLL (Harten-Lax-van Leer)** appro
 
 ### Data Structures
 * **Grid Layout:** We utilize an **Array of Structures (AoS)** pattern via `std::vector<Cell>`.
-    * *Reasoning:* For 1D educational codes, AoS offers better code readability and easier logical grouping of cell properties compared to SoA. (Note: For high-performance vectorized 3D codes, SoA would be preferred).
+    * *Reasoning:* For 1D codes, AoS offers better code readability and easier logical grouping of cell properties compared to SoA. (Note: For high-performance vectorized 3D codes, SoA would be preferred. Also done in ENZO).
 * **Ghost Cells:** Boundary conditions are handled by setting the state of ghost cells (implied at indices `0` and `nx`) prior to flux computation, keeping the core loop divergence-free.
 
 ### Hybrid Pipeline
 1.  **Python (`parser.py`):** Validates inputs and preserves physics metadata (Gamma, CFL) which is often lost in raw binary outputs.
 2.  **C++ (`solver.cpp`):** Performs the heavy lifting. Outputs raw CSVs for maximum transparency and easy debugging.
 3.  **Python (`run.py`):** Acts as the driver. Compiles code on-the-fly, cleans directories, runs the binary, and efficiently aggregates thousands of CSV rows into a single binary tensor (`simulation.npy`).
-
-## 4. Integration & Industry Mapping
-
-This project demonstrates skills directly mapable to **Model-Based Design** and **Scientific Computing** workflows:
-
-### Mapping to MathWorks/Simulink
-* **C++ Integration:** The core `Solver::step` function is designed to be easily wrapped as a **Simulink S-Function** or integrated via **MATLAB Coder**.
-* **SIL/PIL Testing:** The hybrid Python/C++ structure mirrors "Software-in-the-Loop" testing, where a compiled numerical kernel is validated against a scripting environment.
-* **Surrogate Modeling:** The output dataset (`simulation.npy`) is structured perfectly for training Reduced Order Models (ROMs) or Deep Learning surrogates (e.g., Physics-Informed Neural Networks) using the **Deep Learning Toolbox**.
-
-## 5. Limitations & Future Work
-* **Spatial Reconstruction:** Currently First-Order Godunov (Piecewise Constant). Future upgrade: Piecewise Linear Method (PLM) for 2nd order accuracy.
-* **Geometry:** Strictly 1D Cartesian.
-* **Performance:** Uses CSV I/O for clarity. For large-scale runs, this should be replaced with HDF5 or unformatted binary I/O.

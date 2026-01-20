@@ -57,7 +57,7 @@ Check the `data/plots/` directory:
 * `profile_*.png`: Static profiles at different time steps for pressure, density and velocity.
 
 ## Sample Output
-`![Shock Tube GIF](data/plots/simulation.gif)`
+![Shock Tube GIF](data/plots/simulation.gif)
 
 ## Configuration
 The solver is controlled by `.enzo` files. Example:
@@ -72,3 +72,8 @@ t_final = 0.2
 output_dt = 0.01  # Snapshot cadence in simulation time
 bc_type = outflow # Options: outflow, reflective
 ```
+
+## Limitations & Future Work
+* **Spatial Reconstruction:** Currently First-Order Godunov (Piecewise Constant). Future upgrade: Piecewise Linear Method (PLM) for 2nd order accuracy.
+* **Geometry:** Strictly 1D Cartesian.
+* **Performance:** Uses CSV I/O for clarity. For large-scale runs, this should be replaced with HDF5 or unformatted binary I/O.
